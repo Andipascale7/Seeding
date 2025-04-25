@@ -1,23 +1,33 @@
 # NC News Seeding
 
-Environment Setup
+1)Setup:
 
-Before running this project locally, you need to set up two PostgreSQL databases: one for development and one for testing.
+To get up and running with this project, make sure you have PostgreSQL and Node.js installed.
+git clone add_repo_url_here
+cd YOUR_PROJECT_FOLDER
+npm install
 
-Create the Databases
 
-Run the setup script to create both databases:
+2)Create databases
+
 npm run setup-dbs
 
-This runs the setup-dbs.sql file, which creates:
+  3)Set up environment variables
+  
+3)Create two environment files in the root of your project:
 
-    nc_news – the development database (with realistic data)
+.env.development
+type inside the file: PGDATABASE=nc_news
 
-    nc_news_test – the test database (with simpler data)
+.env.test
+type inside the file: PGDATABASE=nc_news_test
 
-Create Environment Variable Files
-Since .env.* files are ignored by Git for security reasons, you will need to create them manually so that your application knows which database to connect to in different environments.
+Make sure your .gitignore includes .env.* so these files don't get pushed to GitHub!
 
-.env.development  (add inside the file:  PGDATABASE=nc_news )
+4)Seeding the Databases
 
-.env.test (add inside the file:  PGDATABASE=nc_news_test )
+npm run seed-dev
+npm run test-seed
+
+5)Testing
+npm run test-seed
