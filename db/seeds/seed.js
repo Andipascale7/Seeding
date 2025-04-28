@@ -1,6 +1,7 @@
 const db = require("../connection");
 const topics = require("../data/development-data/topics");
 const format = require("pg-format");
+const { createArticlesLookupObj } = require("./utils");
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -51,7 +52,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
         CREATE TABLE comments(
           comment_id SERIAL PRIMARY KEY, 
           article_id INTEGER REFERENCES Articles(article_id),
-          body TEXT,
+          body TEXT NOT NULL,
           votes INTEGER DEFAULT 0,
           author VARCHAR(100) REFERENCES Users(username),
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
@@ -117,18 +118,22 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       );
       return db.query(insertArticlesQueryString);
     })
-    .then(() => {
+    .then((result) => {
+      const articlesLookup = createArticlesLookupObj(result.rows);
       //transform array of objects into nested arrays
+    
       const formattedComments = commentData.map((comment) => {
         const timestamp = new Date(comment.created_at);
         return [
-          comment.article_id,
+          articlesLookup[comment.article_title],
           comment.body,
           comment.votes,
           comment.author,
           timestamp,
         ];
       });
+      console.log(formattedComments);
+
       const insertCommentsQueryString = format(
         `INSERT INTO comments
   (article_id, body, votes, author, created_at)

@@ -6,4 +6,14 @@ exports.convertTimestampToDate = ({ created_at, ...otherProperties }) => {
 };
 
 
+exports.createArticlesLookupObj = (articlesData) => {
+  if (articlesData.length === 0) {
+  return {};
+}
+const lookupObj = {};
+articlesData.forEach((article) => {
+lookupObj[article.title] = article.article_id;
+});
 
+return lookupObj;
+};

@@ -1,5 +1,6 @@
 const {
-  convertTimestampToDate
+  convertTimestampToDate,
+  createArticlesLookupObj,
 } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
@@ -38,3 +39,59 @@ describe("convertTimestampToDate", () => {
   });
 });
 
+describe("createArticlesLookupObj", () => {
+  test("should return an empty object when passed an empty array", () => {
+    const input = [];
+    const result = createArticlesLookupObj(input);
+    expect(result).toEqual({});
+  });
+
+  test("should return an object containing a single key and value when passed an array of length 1", () => {
+    const input = [
+      {
+        article_id: 1,
+        title: 'Living in the shadow of a great man',
+        topic: 'mitch',
+        author: 'butter_bridge',
+        body: 'I find this existence challenging',
+        created_at: "2020-07-09T20:11:00.000Z",
+        votes: 100,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      }
+    ];
+    const result = createArticlesLookupObj(input);
+    expect(result).toEqual({
+      'Living in the shadow of a great man': 1
+    });
+  });
+
+  test('should return a lookup object with multiple keys and values when passed an array of multiple objects', () => {
+    const input = [
+      {
+        article_id: 3,
+        title: 'Eight pug gifs that remind me of mitch',
+        topic: 'mitch',
+        author: 'icellusedkars',
+        body: 'some gifs',
+        created_at: "2020-11-03T09:12:00.000Z",
+        votes: 0,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      },
+      {
+        article_id: 4,
+        title: 'Student SUES Mitch!',
+        topic: 'mitch',
+        author: 'rogersop',
+        body: 'We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages',
+        created_at: "2020-05-06T01:14:00.000Z",
+        votes: 0,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+      }
+    ];
+    const result = createArticlesLookupObj(input);
+    expect(result).toEqual({
+      'Eight pug gifs that remind me of mitch': 3,
+      'Student SUES Mitch!': 4
+    });
+  });
+}); 
