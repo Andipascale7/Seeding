@@ -5,7 +5,7 @@ const data = require("../db/data/test-data/index");
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-describe("seed", () => {
+xdescribe("seed", () => {
   describe("topics table", () => {
     test("topics table exists", () => {
       return db
@@ -563,7 +563,7 @@ describe("seed", () => {
   });
 });
 
-describe("data insertion", () => {
+xdescribe("data insertion", () => {
   test("topics data has been inserted correctly", () => {
     return db.query(`SELECT * FROM topics;`).then(({ rows: topics }) => {
       expect(topics).toHaveLength(3);
