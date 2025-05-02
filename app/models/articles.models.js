@@ -1,5 +1,4 @@
 const db = require("../../db/connection");
-const Test = require("supertest/lib/test");
 
 const fetchArticleById = (articleId) => {
   return db
