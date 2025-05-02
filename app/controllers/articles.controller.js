@@ -15,7 +15,6 @@ const {
 //     });
 // };
 
-
 exports.getArticleById = (req, res) => {
   const { article_id } = req.params;
 
@@ -28,7 +27,6 @@ exports.getArticleById = (req, res) => {
     })
     .catch((err) => {
       if (err.code === "22P02") {
-       
         res.status(400).send({ msg: "Bad request" });
       } else {
         console.error("Error fetching article", err);
@@ -44,7 +42,11 @@ exports.getAllArticles = (req, res) => {
       res.status(200).send({ articles });
     })
     .catch((err) => {
-      console.error("Error fetching articles", err);
-      res.status(500).send({ msg: "Server Error" });
+      if (err.code === "22P02") {
+        res.status(400).send({ msg: "Bad request" });
+      } else {
+        console.error("Error fetching article", err);
+        res.status(500).send({ msg: "Server Error" });
+      }
     });
 };

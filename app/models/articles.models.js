@@ -31,5 +31,4 @@ const fetchAllArticles = () => {
   });
 };
 
-
-module.exports = {fetchArticleById, fetchAllArticles};
+module.exports = { fetchArticleById, fetchAllArticles };
