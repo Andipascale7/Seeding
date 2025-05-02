@@ -138,3 +138,53 @@ describe("GET /api/articles", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: responds with an array of comments for a valid article_id, sorted by most recent first", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+
+        expect(Array.isArray(comments)).toBe(true);
+
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              article_id: 1,
+            })
+          );
+        });
+
+        for (let i = 1; i < comments.length; i++) {
+          const prev = new Date(comments[i - 1].created_at);
+          const curr = new Date(comments[i].created_at);
+          expect(prev >= curr).toBe(true);
+        }
+      });
+  });
+
+  test("400: responds with 'Bad request' when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+
+  test("404: responds with 'Comments not found' when no comments exist for article_id", () => {
+    return request(app)
+      .get("/api/articles/9789/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comments not found");
+      });
+  });
+});

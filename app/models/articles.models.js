@@ -31,4 +31,27 @@ const fetchAllArticles = () => {
   });
 };
 
-module.exports = { fetchArticleById, fetchAllArticles };
+const fetchArticleComments = (articleId) => {
+  return db
+    .query(
+      ` SELECT 
+      comments.comment_id,
+      comments.votes,
+      comments.created_at,
+      comments.author,
+      comments.body,
+      articles.article_id
+    FROM comments
+    JOIN articles ON articles.article_id = comments.article_id
+    WHERE articles.article_id = $1
+    ORDER BY comments.created_at DESC;
+  `,
+      [articleId]
+    )
+    .then((response) => {
+      console.log("Query comments", response.rows);
+      return response.rows;
+    });
+};
+
+module.exports = { fetchArticleById, fetchAllArticles, fetchArticleComments };
