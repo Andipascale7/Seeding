@@ -46,6 +46,43 @@ describe("GET /api/topics", () => {
   });
 });
 
+describe("GET /api/articles/:article_id", () => {
+  test("200: Responds with an article object matching the given ID", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toBeInstanceOf(Object);
+        expect(article).toMatchObject({
+          article_id: 1,
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+        });
+      });
+  });
+
+  // test("500: responds with 'Server Error' when article_id is not a number", () => {
+  //   return request(app)
+  //     .get("/api/articles/not-a-number")
+  //     .expect(500)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe("Server Error");
+
+  test("400: responds with 'Bad request' when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
 describe("ERROR HANDLING: invalid paths", () => {
   test("404: responds with 'Route not found' for an invalid path", () => {
     return request(app)
@@ -55,4 +92,13 @@ describe("ERROR HANDLING: invalid paths", () => {
         expect(body.msg).toBe("Route not found");
       });
   });
+});
+
+test("404: responds with 'Article not found' when article does not exist", () => {
+  return request(app)
+    .get("/api/articles/9999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Article not found");
+    });
 });
