@@ -7,12 +7,12 @@
     "setup-dbs": "psql -f ./db/setup-dbs.sql",
     "seed-dev": "node ./db/seeds/run-seed.js",
     "test": "jest",
-    "prepare": "husky install",
+    "prepare": "if [ \"$RENDER\" != \"true\" ]; then husky install; fi",
     "start": "node listen.js",
     "seed-prod": "NODE_ENV=production npm run seed",
-    "test-seed": "jest seed.test.js", 
+    "test-seed": "jest seed.test.js",
     "test-app": "jest app.test.js",
-     "seed": "node db/seeds/run-seed.js"
+    "seed": "node db/seeds/run-seed.js"
   },
   "repository": {
     "type": "git",
