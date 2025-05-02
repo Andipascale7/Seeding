@@ -1,4 +1,7 @@
-const fetchArticleById = require("../models/articles.models");
+const {
+  fetchArticleById,
+  fetchAllArticles,
+} = require("../models/articles.models");
 
 // exports.getArticleById = (req, res) => {
 //   fetchArticleById(req.params.article_id)
@@ -12,7 +15,6 @@ const fetchArticleById = require("../models/articles.models");
 //     });
 // };
 
-
 exports.getArticleById = (req, res) => {
   const { article_id } = req.params;
 
@@ -25,7 +27,22 @@ exports.getArticleById = (req, res) => {
     })
     .catch((err) => {
       if (err.code === "22P02") {
-       
+        res.status(400).send({ msg: "Bad request" });
+      } else {
+        console.error("Error fetching article", err);
+        res.status(500).send({ msg: "Server Error" });
+      }
+    });
+};
+
+exports.getAllArticles = (req, res) => {
+  fetchAllArticles()
+    .then((articles) => {
+      console.log("articles fetched", articles);
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      if (err.code === "22P02") {
         res.status(400).send({ msg: "Bad request" });
       } else {
         console.error("Error fetching article", err);
