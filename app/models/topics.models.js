@@ -1,6 +1,5 @@
 const endpoints = require("../../endpoints.json");
 const db = require("../../db/connection");
-const Test = require("supertest/lib/test");
 
 exports.selectNews = () => {
   return endpoints;
@@ -12,6 +11,5 @@ const fetchTopics = () => {
     return response.rows;
   });
 };
-
 
 module.exports = fetchTopics;
