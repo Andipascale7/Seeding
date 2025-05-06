@@ -26,7 +26,6 @@ const fetchAllArticles = () => {
   `;
 
   return db.query(queryStr).then((result) => {
-    console.log("Query articles", result.rows);
     return result.rows;
   });
 };
@@ -57,8 +56,8 @@ const fetchArticleComments = (articleId) => {
 const postComments = (articleId, username, body) => {
   return db
     .query(
-      `INSERT INTO comments (body, votes, author, created_at)
-SELECT $2, 0, $3, NOW()
+      `INSERT INTO comments (article_id, body, votes, author, created_at)
+SELECT articles.article_id, $2, 0, $3, NOW()
 FROM articles
 WHERE articles.article_id = $1
 RETURNING *;
