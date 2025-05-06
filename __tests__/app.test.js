@@ -188,3 +188,84 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: responds with the posted comment when given valid username and body", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a test comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const comment = body.comment;
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: "This is a test comment",
+            author: "butter_bridge",
+            votes: 0,
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("400: responds with 'Bad request' when article_id is not a number", () => {
+    return request(app)
+      .post("/api/articles/not-a-number/comments")
+      .send({ username: "butter_bridge", body: "Some comment" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+
+  test("404: responds with 'Comments not found' when the article does not exist", () => {
+    return request(app)
+      .post("/api/articles/9999/comments")
+      .send({ username: "butter_bridge", body: "Some comment" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comments not added");
+      });
+  });
+
+  test("400: responds with 'Bad request: body must contain only 'username' and 'body' as strings' when body is missing from request", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'username' and 'body' as strings"
+        );
+      });
+  });
+
+  test("400: responds with 'Bad request: body must contain only 'username' and 'body' as strings' when username is missing from request", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ body: "Missing username here" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'username' and 'body' as strings"
+        );
+      });
+  });
+
+  test("400: responds with 'Bad request: body must contain only 'username' and 'body' as strings' when both username and body are missing", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'username' and 'body' as strings"
+        );
+      });
+  });
+});

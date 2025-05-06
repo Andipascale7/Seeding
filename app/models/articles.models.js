@@ -54,4 +54,27 @@ const fetchArticleComments = (articleId) => {
     });
 };
 
-module.exports = { fetchArticleById, fetchAllArticles, fetchArticleComments };
+const postComments = (articleId, username, body) => {
+  return db
+    .query(
+      `INSERT INTO comments (body, votes, author, created_at)
+SELECT $2, 0, $3, NOW()
+FROM articles
+WHERE articles.article_id = $1
+RETURNING *;
+
+  `,
+      [articleId, body, username]
+    )
+    .then((response) => {
+      console.log("New comment added", response.rows);
+      return response.rows[0];
+    });
+};
+
+module.exports = {
+  fetchArticleById,
+  fetchAllArticles,
+  fetchArticleComments,
+  postComments,
+};
