@@ -4,6 +4,7 @@ const db = require("./db/connection");
 
 const exportedTopic = require("./app/controllers/topics.controller");
 const exportedArticle = require("./app/controllers/articles.controller");
+const exportedComments = require("./app/controllers/comments.controller");
 
 const getNews = exportedTopic.getNews;
 
@@ -19,8 +20,7 @@ const addCommentForArticle = exportedArticle.addCommentForArticle;
 
 const updateArticleById = exportedArticle.updateArticleById;
 
-
-
+const deleteCommentById = exportedComments.deleteCommentById;
 
 app.use(express.json());
 
@@ -37,6 +37,8 @@ app.get("/api/articles/:article_id/comments", getCommentsForArticle);
 app.post("/api/articles/:article_id/comments", addCommentForArticle);
 
 app.patch("/api/articles/:article_id", updateArticleById);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.use((req, res, next) => {
   res.status(404).send({ msg: "Route not found" });
