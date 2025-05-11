@@ -270,7 +270,6 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-
 describe("PATCH /api/articles/:article_id", () => {
   test("200: increments votes when passed a valid inc_votes", () => {
     return request(app)
@@ -310,7 +309,9 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({})
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'inc_votes' as a number"
+        );
       });
   });
 
@@ -320,7 +321,9 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: 1, extra: "invalid" })
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'inc_votes' as a number"
+        );
       });
   });
 
@@ -330,7 +333,9 @@ describe("PATCH /api/articles/:article_id", () => {
       .send({ inc_votes: "ten" })
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+        expect(body.msg).toBe(
+          "Bad request: body must contain only 'inc_votes' as a number"
+        );
       });
   });
 
@@ -348,6 +353,30 @@ describe("PATCH /api/articles/:article_id", () => {
     return request(app)
       .patch("/api/articles/not-a-number")
       .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: responds with no content when comment is successfully deleted", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("404: responds with 'Comment not found' for a non-existent comment", () => {
+    return request(app)
+      .delete("/api/comments/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Comment not found");
+      });
+  });
+
+  test("400: responds with 'Bad request' for invalid comment_id", () => {
+    return request(app)
+      .delete("/api/comments/not-a-number")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad request");
