@@ -269,3 +269,88 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: increments votes when passed a valid inc_votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+          })
+        );
+      });
+  });
+
+  test("200: decrements votes when passed a negative inc_votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: -5 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.votes).toEqual(expect.any(Number));
+      });
+  });
+
+  test("400: responds with error for missing inc_votes field", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+      });
+  });
+
+  test("400: responds with error for extra fields in the body", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1, extra: "invalid" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+      });
+  });
+
+  test("400: responds with error when inc_votes is not a number", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "ten" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request: body must contain only 'inc_votes' as a number");
+      });
+  });
+
+  test("404: responds with error if article_id doesn't exist", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
+  });
+
+  test("400: responds with error for invalid article_id type", () => {
+    return request(app)
+      .patch("/api/articles/not-a-number")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
+});

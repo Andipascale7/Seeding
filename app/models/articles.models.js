@@ -71,9 +71,26 @@ RETURNING *;
     });
 };
 
+const patchArticleById = (articleId, votes) => {
+  return db
+    .query(
+      `UPDATE articles
+SET votes = votes + $1
+WHERE article_id = $2
+RETURNING *;
+  `,
+      [votes, articleId]
+    )
+    .then((response) => {
+      console.log("Article votes updated", response.rows);
+      return response.rows[0];
+    });
+};
+
 module.exports = {
   fetchArticleById,
   fetchAllArticles,
   fetchArticleComments,
   postComments,
+  patchArticleById,
 };
