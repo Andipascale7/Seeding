@@ -17,6 +17,11 @@ const getCommentsForArticle = exportedArticle.getCommentsForArticle;
 
 const addCommentForArticle = exportedArticle.addCommentForArticle;
 
+const updateArticleById = exportedArticle.updateArticleById;
+
+
+
+
 app.use(express.json());
 
 app.get("/api", getNews);
@@ -30,6 +35,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsForArticle);
 
 app.post("/api/articles/:article_id/comments", addCommentForArticle);
+
+app.patch("/api/articles/:article_id", updateArticleById);
 
 app.use((req, res, next) => {
   res.status(404).send({ msg: "Route not found" });

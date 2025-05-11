@@ -3,6 +3,7 @@ const {
   fetchAllArticles,
   fetchArticleComments,
   postComments,
+  patchArticleById,
 } = require("../models/articles.models");
 
 exports.getArticleById = (req, res) => {
@@ -88,6 +89,37 @@ exports.addCommentForArticle = (req, res) => {
         res.status(400).send({ msg: "Bad request" });
       } else {
         console.error("Error fetching comments", err);
+        res.status(500).send({ msg: "Server Error" });
+      }
+    });
+};
+
+exports.updateArticleById = (req, res) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (
+    !req.body ||
+    typeof inc_votes !== "number" ||
+    Object.keys(req.body).length !== 1
+  ) {
+    return res.status(400).send({
+      msg: "Bad request: body must contain only 'inc_votes' as a number",
+    });
+  }
+
+  patchArticleById(article_id, inc_votes)
+    .then((article) => {
+      if (!article) {
+        return res.status(404).send({ msg: "Article not found" });
+      }
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      if (err.code === "22P02") {
+        res.status(400).send({ msg: "Bad request" });
+      } else {
+        console.error("Error fetching article", err);
         res.status(500).send({ msg: "Server Error" });
       }
     });
