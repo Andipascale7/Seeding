@@ -21,8 +21,6 @@ const fetchAllArticles = (sortBy, order, topic) => {
     "comment_count",
   ];
 
-  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", { topic });
-
   const validOrders = ["asc", "desc"];
 
   order = order.toLowerCase();
