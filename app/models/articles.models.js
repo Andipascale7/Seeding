@@ -57,7 +57,7 @@ const fetchAllArticles = (sortBy, order, topic) => {
     ORDER BY ${sortBy} ${order};
   `;
 
-  return db.query(queryStr).then((result) => {
+  return db.query(queryStr, queryValues).then((result) => {
     return result.rows;
   });
 };
