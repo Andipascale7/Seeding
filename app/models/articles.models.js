@@ -9,7 +9,7 @@ const fetchArticleById = (articleId) => {
     });
 };
 
-const fetchAllArticles = (sortBy, order) => {
+const fetchAllArticles = (sortBy, order, topic) => {
   const validSortColumns = [
     "article_id",
     "title",
@@ -33,7 +33,8 @@ const fetchAllArticles = (sortBy, order) => {
     return Promise.reject({ status: 400, msg: "Invalid order query" });
   }
 
-  const queryStr = `
+  const queryValues = [];
+  let queryStr = `
     SELECT articles.article_id,
            articles.title,
            articles.topic,
@@ -44,8 +45,17 @@ const fetchAllArticles = (sortBy, order) => {
            COUNT(comments.comment_id)::INT AS comment_count
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
+  `;
+
+  if (topic) {
+    queryValues.push(topic);
+    queryStr += `WHERE articles.topic = $1\n`;
+  }
+
+  queryStr += `
     GROUP BY articles.article_id
-  ORDER BY ${sortBy} ${order};  `;
+    ORDER BY ${sortBy} ${order};
+  `;
 
   return db.query(queryStr).then((result) => {
     return result.rows;
