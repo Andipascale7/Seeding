@@ -21,6 +21,8 @@ const fetchAllArticles = (sortBy, order, topic) => {
     "comment_count",
   ];
 
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", { topic });
+
   const validOrders = ["asc", "desc"];
 
   order = order.toLowerCase();
@@ -57,7 +59,7 @@ const fetchAllArticles = (sortBy, order, topic) => {
     ORDER BY ${sortBy} ${order};
   `;
 
-  return db.query(queryStr).then((result) => {
+  return db.query(queryStr, queryValues).then((result) => {
     return result.rows;
   });
 };
