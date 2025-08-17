@@ -66,7 +66,6 @@ npm run test-seed     //seeds and verifies the test database
 
 📌 Future Improvements
 
-Authentication & Authorization
 
 Pagination support
 
