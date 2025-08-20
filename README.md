@@ -3,7 +3,9 @@
 A RESTful API built with Node.js, Express.js, and PostgreSQL, serving as the backend for a Reddit-style news application. 
 This project supports full CRUD functionality for articles, comments, topics, and users, and includes robust error handling and integration tests.
 
+
  
+
  
 🛠️ Setup instructions
 
@@ -61,6 +63,8 @@ npm run seed-dev
 6.Testing
 npm test               //runs all tests using Jest
 npm run test-seed     //seeds and verifies the test database
+
+
 
 
 
