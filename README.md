@@ -73,3 +73,8 @@ npm run test-seed     //seeds and verifies the test database
 
 Pagination support
 
+
+
+Front end repo:
+https://github.com/Andipascale7/nc-news
+
