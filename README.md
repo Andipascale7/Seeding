@@ -4,6 +4,9 @@ A RESTful API built with Node.js, Express.js, and PostgreSQL, serving as the bac
 This project supports full CRUD functionality for articles, comments, topics, and users, and includes robust error handling and integration tests.
 
 
+Front end repo:
+https://github.com/Andipascale7/nc-news
+
  
 
  
@@ -74,7 +77,4 @@ npm run test-seed     //seeds and verifies the test database
 Pagination support
 
 
-
-Front end repo:
-https://github.com/Andipascale7/nc-news
 
